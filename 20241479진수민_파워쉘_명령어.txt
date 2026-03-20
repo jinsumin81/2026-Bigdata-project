@@ -1,11 +1,11 @@
-(venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> pwd
+(.venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> pwd
 
 Path
 ----
 C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w
 
 
-(venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> ls
+(.venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> ls
 
 
     디렉터리: C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w
@@ -13,13 +13,19 @@ C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w
 
 Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
-d-----      2026-03-20  오전 10:51                aaa
+d-----      2026-03-20  오전 11:42                .venv
+d-----      2026-03-20  오전 11:51                2_week
+d-----      2026-03-20  오후 12:01                3_week
 d-----      2026-03-20  오전 10:48                venv
--a----      2026-03-20  오전 10:56              3 README.md
+-a----      2026-03-20  오후 12:08            164 .gitignore
+-a----      2026-03-20  오후 12:00           2850 20241479진수민_파워쉘_명령어.txt     
+-a----      2026-03-20  오전 11:37              3 README.md
 -a----      2026-03-20  오전 10:48           1772 requirements.txt
 
 
-(venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> dir
+(.venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> cd 2_week
+(.venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w\2_week> cd ..
+(.venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> mkdir new
 
 
     디렉터리: C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w
@@ -27,37 +33,12 @@ d-----      2026-03-20  오전 10:48                venv
 
 Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
-d-----      2026-03-20  오전 10:51                aaa
-d-----      2026-03-20  오전 10:48                venv
--a----      2026-03-20  오전 10:56              3 README.md
--a----      2026-03-20  오전 10:48           1772 requirements.txt
+d-----      2026-03-20  오후 12:28                new
 
 
-(venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> cd aaa
-(venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w\aaa> cd ..
-(venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> mkdir new
-
-
-    디렉터리: C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w
-
-
-Mode                 LastWriteTime         Length Name
-----                 -------------         ------ ----
-d-----      2026-03-20  오전 11:03                new
-
-
-(venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> cat README.md
+(.venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> cat README.md
 aaa
-(venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> cp aaa/app.py
-(venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> mv aaa/pandas_analysis.py
-(venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> rm app.py
-(venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> re -Recurse new
-re : 're' 용어가 cmdlet, 함수, 스크립트 파일 또는 실행할 수 있는 프로그램 이름으로 인식되지 않습니다. 이름이 정확한지 확인하고 
-경로가 포함된 경우 경로가 올바른지 검증한 다음 다시 시도하십시오.
-위치 줄:1 문자:1
-+ re -Recurse new
-+ ~~
-    + CategoryInfo          : ObjectNotFound: (re:String) [], CommandNotFoundException
-    + FullyQualifiedErrorId : CommandNotFoundException
-
-(venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> rm -Recurse new
+(.venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> cp 2_week/app.py
+(.venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> mv 3_week/test.py
+(.venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> rm app.py
+(.venv) PS C:\Users\JIN\Desktop\동미대 3-1\빅데이터분석프로젝트\2w> rm -Recurse new
