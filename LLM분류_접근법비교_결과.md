@@ -11,15 +11,16 @@
 90/100건 완료 (65.4초, 건당 0.73초)<br>
 100/100건 완료 (72.0초, 건당 0.72초)<br>
 정확도<br>
-LLM 정확도: 0.8300<br>
-LLM F1:    0.8211<br>
-분류 실패(Unknown): 1건<br>
+```text
+LLM 정확도: 0.8300
+LLM F1:    0.8211
+분류 실패(Unknown): 1건
 
-              precision    recall  f1-score   support <br>
+              precision    recall  f1-score   support
 
-      Normal       0.90      0.79      0.84        56<br>
-   Anomalous       0.76      0.89      0.82        44<br>
+      Normal       0.90      0.79      0.84        56
+   Anomalous       0.76      0.89      0.82        44
 
-    accuracy                           0.83       100<br>
-   macro avg       0.83      0.84      0.83       100<br>
-weighted avg       0.84      0.83      0.83       100<br>
+    accuracy                           0.83       100
+   macro avg       0.83      0.84      0.83       100
+weighted avg       0.84      0.83      0.83       100
