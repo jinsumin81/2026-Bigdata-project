@@ -7,3 +7,5 @@ matplotlib
 scikit-learn
 xgboost
 joblib
+spotipy
+python-dotenv
