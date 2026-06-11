@@ -4,7 +4,7 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="취업 인기 직종 추천 서비스",
+    page_title="워크넷 기준 직종 추천 서비스",
     page_icon="💼",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -16,11 +16,11 @@ viz     = st.Page("pages/2_시각화.py",     title="시각화",    icon="📈")
 service = st.Page("pages/3_모델_서비스.py", title="직종 추천", icon="💼")
 
 pg = st.navigation({
-    "취업 인기 직종 추천 서비스": [eda, viz, service],
+    "워크넷 기준 직종 추천 서비스": [eda, viz, service],
 })
 
 # 사이드바
-st.sidebar.markdown("### 💼 취업 인기 직종 추천 서비스")
+st.sidebar.markdown("### 💼 워크넷 기준 직종 추천 서비스")
 st.sidebar.caption("구인구직 데이터 기반 직종 트렌드 분석")
 st.sidebar.markdown("---")
 st.sidebar.caption("진수민 / 20241479")

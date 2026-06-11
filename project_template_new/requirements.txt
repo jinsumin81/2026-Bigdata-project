@@ -1,5 +1,9 @@
-streamlit
+﻿streamlit
 pandas
 numpy
 plotly
 openpyxl
+ollama
+requests
+python-dotenv
+scikit-learn

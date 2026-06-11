@@ -1,4 +1,4 @@
-import sys, os
+﻿import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 import streamlit as st
@@ -30,7 +30,7 @@ fig1 = px.bar(by_year, x="구인인원", y="직종_중분류", orientation="h",
 fig1.update_layout(yaxis={"categoryorder": "total ascending"})
 with c2:
     st.plotly_chart(fig1, use_container_width=True)
-st.caption("해석: 연도를 바꿔가며 해당 시점의 구인 수요 상위 직종을 확인할 수 있다.")
+st.caption("💡 인사이트: 연도별로 꾸준히 상위에 드는 직종이 경기 변동에 강한 안정적 수요를 가진다. 2023→2025 연속 TOP 5에 든 직종을 취업 1순위 목표로 삼아라.")
 
 # --- 그래프 2: 월별 구인 추이 ---
 st.header("2. 주요 직종 구인 인원 월별 추이")
@@ -41,7 +41,7 @@ if selected:
     fig2 = px.line(trend, x="기간", y="구인인원", color="직종_중분류",
                    title="월별 구인인원 추이")
     st.plotly_chart(fig2, use_container_width=True)
-    st.caption("해석: 특정 시기에 수요가 급증하는 직종을 확인할 수 있다.")
+    st.caption("💡 인사이트: 구인이 급증하는 시기(보통 3~4월, 9~10월)에 맞춰 지원서를 준비하면 경쟁이 가장 낮은 시점에 지원할 수 있다. 내가 목표하는 직종의 피크 시즌을 확인하라.")
 
 # --- 그래프 3: 연도 × 직종 구인 히트맵 ---
 st.header("3. 연도별 직종 구인 규모 히트맵")
@@ -79,7 +79,7 @@ fig3.update_layout(
     height=max(400, hm_n * 30),
 )
 st.plotly_chart(fig3, use_container_width=True)
-st.caption("해석: 각 행은 해당 직종의 최대 구인량을 1로 정규화. 위로 갈수록 성장세, 아래로 갈수록 감소세 직종.")
+st.caption("💡 인사이트: 2021→2025로 갈수록 색이 진해지는(초록) 직종이 성장 직종이다. 반대로 색이 옅어지는(빨강) 직종은 구인이 줄고 있어 장기 커리어로는 불리하다 — 10년 뒤를 보고 직종을 고른다면 초록 직종에 집중하라.")
 
 # --- 그래프 4: 취업 경쟁률 ---
 st.header("4. 직종별 평균 취업 경쟁률 (구직건수 / 구인인원)")
@@ -88,4 +88,4 @@ fig4 = px.bar(comp, x="경쟁률", y="직종_중분류", orientation="h",
               title="취업 경쟁률 상위 15개 직종")
 fig4.update_layout(yaxis={"categoryorder": "total ascending"})
 st.plotly_chart(fig4, use_container_width=True)
-st.caption("해석: 경쟁률이 높을수록 구직자 대비 구인 자리가 부족한 직종.")
+st.caption("💡 인사이트: 경쟁률 5 이상이면 자리 1개에 지원자 5명 이상 — 이 직종을 목표로 한다면 스펙 외 포트폴리오·자격증 차별화가 필수다. 반대로 경쟁률 2 미만 직종은 상대적으로 취업이 쉬운 블루오션이다.")
