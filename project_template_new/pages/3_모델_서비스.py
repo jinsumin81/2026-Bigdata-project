@@ -1,4 +1,4 @@
-﻿import sys, os
+import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 import streamlit as st
@@ -10,147 +10,19 @@ from dotenv import load_dotenv
 from src.data_loader import load_data
 from src.features import clean, add_features
 
-load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
+load_dotenv(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
 WORKNET_API_KEY = os.getenv("WORKNET_API_KEY", "")
-
-# 사용자 키워드 → 직종명 검색어 확장 사전 (값은 실제 직종 중분류명 포함 단어 기준)
-KEYWORD_EXPAND = {
-    # IT·개발
-    "코딩": ["정보통신"],
-    "프로그래밍": ["정보통신"],
-    "개발": ["정보통신"],
-    "소프트웨어": ["정보통신"],
-    "데이터": ["정보통신"],
-    "IT": ["정보통신"],
-    "컴퓨터": ["정보통신"],
-    "인공지능": ["정보통신"],
-    "AI": ["정보통신"],
-    "파이썬": ["정보통신"],
-    "네트워크": ["정보통신"],
-    "앱": ["정보통신"],
-    "서버": ["정보통신"],
-    # 교육
-    "교육": ["교육"],
-    "가르치": ["교육"],
-    "강의": ["교육"],
-    "수업": ["교육"],
-    "강사": ["교육"],
-    "선생": ["교육"],
-    "튜터": ["교육"],
-    # 경영·사무
-    "경영": ["경영"],
-    "관리": ["관리"],
-    "행정": ["경영"],
-    "사무": ["경영"],
-    "회계": ["경영", "금융"],
-    "마케팅": ["경영", "영업"],
-    "기획": ["경영"],
-    "인사": ["경영"],
-    # 영업·판매
-    "영업": ["영업"],
-    "판매": ["영업"],
-    "세일즈": ["영업"],
-    # 보건·의료
-    "의료": ["보건"],
-    "간호": ["보건"],
-    "의사": ["보건"],
-    "병원": ["보건"],
-    "치료": ["보건"],
-    "재활": ["보건"],
-    "약사": ["보건"],
-    # 사회복지
-    "복지": ["사회복지"],
-    "봉사": ["사회복지"],
-    "상담": ["사회복지"],
-    "돌봄": ["돌봄"],
-    "간병": ["돌봄"],
-    "육아": ["돌봄"],
-    # 건설
-    "건설": ["건설"],
-    "건축": ["건설"],
-    "토목": ["건설"],
-    # 금융·보험
-    "금융": ["금융"],
-    "보험": ["금융"],
-    "은행": ["금융"],
-    "투자": ["금융"],
-    "재무": ["금융"],
-    # 예술·디자인
-    "디자인": ["예술"],
-    "그래픽": ["예술"],
-    "미술": ["예술"],
-    "예술": ["예술"],
-    "방송": ["예술"],
-    "영상": ["예술"],
-    "사진": ["예술"],
-    # 음식·식품
-    "요리": ["음식"],
-    "조리": ["음식"],
-    "셰프": ["음식"],
-    "식품": ["식품"],
-    # 기계·제조
-    "기계": ["기계"],
-    "제조": ["제조"],
-    "생산": ["기계", "제조"],
-    "용접": ["금속"],
-    "금속": ["금속"],
-    # 전기·전자
-    "전기": ["전기"],
-    "전자": ["전기"],
-    "반도체": ["전기"],
-    # 운전·물류
-    "운전": ["운전"],
-    "물류": ["운전"],
-    "배송": ["운전"],
-    "운송": ["운전"],
-    # 농업
-    "농업": ["농림"],
-    "농사": ["농림"],
-    "축산": ["농림"],
-    # 미용
-    "미용": ["미용"],
-    "뷰티": ["미용"],
-    "헤어": ["미용"],
-    # 관광·숙박
-    "관광": ["여행"],
-    "여행": ["여행"],
-    "호텔": ["여행"],
-    "숙박": ["여행"],
-    # 법률
-    "법": ["법률"],
-    "법률": ["법률"],
-    "변호": ["법률"],
-    # 스포츠
-    "스포츠": ["스포츠"],
-    "체육": ["스포츠"],
-    "운동": ["스포츠"],
-    # 화학·환경
-    "화학": ["화학"],
-    "환경": ["화학"],
-    "에너지": ["화학"],
-    # 연구·학문
-    "연구": ["인문", "자연", "정보통신"],
-    "심리": ["인문"],
-    "사회과학": ["인문"],
-    # 경비·보안
-    "경비": ["경호"],
-    "보안": ["경호"],
-    "경호": ["경호"],
-    # 청소·개인서비스
-    "청소": ["청소"],
-    "세탁": ["청소"],
-}
 
 st.title("직종 추천 서비스")
 
 df = add_features(clean(load_data()))
 all_categories = sorted(df["직종_중분류"].unique().tolist())
 
-# ── 1. 입력 ─────────────────────────────────────────────────────────────────
+# ── 1. 입력 ──────────────────────────────────────────────────────────────────
 st.header("1. 나에 대해 자유롭게 입력해 주세요")
 user_input = st.text_area(
     "전공, 관심사, 잘하는 것, 하고 싶은 일 등 자유롭게 작성하세요.",
-    placeholder="예) 컴퓨터공학을 전공했고 데이터 분석과 파이썬을 좋아합니다. 사람들과 소통하는 일도 관심 있어요.",
+    placeholder="예) 컴퓨터공학을 전공했고 데이터 분석과 파이썬을 좋아합니다.",
     height=120,
 )
 
@@ -158,268 +30,446 @@ if not user_input.strip():
     st.info("위에 내용을 입력하면 추천이 시작됩니다.")
     st.stop()
 
-# ── 2. LLM으로 키워드 추출 (직종 매핑은 하지 않음) ──────────────────────────
-st.header("2. 추천 결과")
+# ── 캐시 확인 ─────────────────────────────────────────────────────────────────
+# 같은 입력이면 재계산 건너뜀 (다운로드 버튼 클릭 등 rerun 대응)
+_run_key = user_input.strip()
+_cache = st.session_state.get("_cache", {})
+_use_cache = _cache.get("run_key") == _run_key
 
-llm_available = False
-extracted_keywords = []
+if _use_cache:
+    llm_available  = _cache["llm_available"]
+    want_keywords  = _cache["want_keywords"]
+    avoid_keywords = _cache["avoid_keywords"]
+    mapped_cats    = _cache["mapped_cats"]
+    unique_jobs    = _cache["unique_jobs"]
+    top5           = _cache["top5"]
+    summary        = _cache["summary"]
+    df_filtered    = _cache["df_filtered"]
+    pred_rows      = _cache["pred_rows"]
+    clf            = _cache["clf"]
+    acc            = _cache["acc"]
+    f1_val         = _cache["f1_val"]
+    model_data     = _cache["model_data"]
+    job_cat_map    = _cache["job_cat_map"]
 
-keyword_prompt = f"""다음 사용자 입력에서 직업·직종과 관련된 핵심 키워드만 추출하세요.
-전공, 기술, 관심 분야, 업무 유형을 키워드로 뽑아주세요.
-쉼표로 구분된 단어 목록만 출력하고, 설명은 하지 마세요.
+else:
+    # ── COMPUTE: LLM 의도 + 카테고리 분석 ────────────────────────────────────
+    llm_available  = False
+    want_keywords  = []
+    avoid_keywords = []
+    mapped_cats    = []
+    categories_list = "\n".join(f"- {c}" for c in all_categories)
 
-입력: "{user_input}"
-키워드:"""
+    intent_prompt = f"""사용자의 전공과 희망 직무를 분석하세요.
 
-try:
-    import ollama
-    with st.spinner("LLM이 키워드를 추출 중..."):
-        res = ollama.chat(
-            model="gemma3:4b",
-            messages=[{"role": "user", "content": keyword_prompt}],
+사용자 입력: "{user_input}"
+
+아래는 직종 분류 목록 전체입니다:
+{categories_list}
+
+규칙:
+- want: 워크넷 직업 검색용 1~2단어 짧은 키워드 (긴 직업명은 핵심 단어로 줄이세요)
+- avoid: 원하지 않는 업무의 핵심 단어 (없으면 빈 배열)
+- categories: 위 직종 분류 목록에서 사용자와 관련 있는 것 최대 4개 (목록에 있는 이름 그대로 복사)
+
+예시1 - AI소프트웨어 전공, 데이터 개발자 희망:
+{{"want": ["소프트웨어", "데이터", "개발자"], "avoid": [], "categories": ["정보통신 연구개발직 및 공학기술직"]}}
+
+예시2 - 기계공학과인데 사무직 희망:
+{{"want": ["품질관리", "생산관리", "기술영업"], "avoid": ["수리", "정비"], "categories": ["경영·행정·사무직", "영업·판매직"]}}
+
+예시3 - 간호학과인데 행정직 희망:
+{{"want": ["의무행정", "병원행정", "의료사무"], "avoid": ["간호", "치료"], "categories": ["보건·의료직", "경영·행정·사무직"]}}
+
+예시4 - 교육학과, 교사·강사 희망:
+{{"want": ["교사", "강사", "교육"], "avoid": [], "categories": ["교육직"]}}
+
+주의: categories는 반드시 위 직종 분류 목록에서 정확히 일치하는 이름만 선택하세요.
+JSON만 출력:"""
+
+    try:
+        import ollama
+        import json as _json
+        with st.spinner("입력 내용 분석 중..."):
+            res = ollama.chat(model="gemma3:4b", messages=[{"role": "user", "content": intent_prompt}])
+        raw = res["message"]["content"].strip()
+        parsed = _json.loads(raw[raw.find("{"):raw.rfind("}")+1])
+        want_keywords  = [k.strip() for k in parsed.get("want", [])  if k.strip()]
+        avoid_keywords = [k.strip() for k in parsed.get("avoid", []) if k.strip()]
+        mapped_cats    = [c.strip() for c in parsed.get("categories", []) if c.strip() in all_categories]
+        llm_available  = True
+    except Exception:
+        import json as _json
+        st.warning("Ollama를 사용할 수 없습니다. 텍스트에서 직접 키워드를 추출합니다.")
+        want_keywords = [w for w in user_input.replace(",", " ").replace(".", " ").split() if len(w) >= 2]
+        mapped_cats   = [cat for cat in all_categories if any(kw in cat for kw in want_keywords)][:4]
+
+    # ── COMPUTE: 워크넷 API 직업 검색 ────────────────────────────────────────
+    def search_worknet_jobs(keyword):
+        if not WORKNET_API_KEY:
+            return []
+        try:
+            r = requests.get(
+                "https://www.work24.go.kr/cm/openApi/call/wk/callOpenApiSvcInfo212L01.do",
+                params={"authKey": WORKNET_API_KEY, "returnType": "XML",
+                        "target": "JOBCD", "srchType": "K", "keyword": keyword},
+                timeout=5,
+            )
+            if r.status_code != 200:
+                return []
+            root = ET.fromstring(r.content.decode("utf-8"))
+            return [
+                {"jobNm": item.findtext("jobNm") or "",
+                 "jobClcdNM": item.findtext("jobClcdNM") or "",
+                 "jobCd": item.findtext("jobCd") or ""}
+                for item in root.iter("jobList") if item.findtext("jobNm")
+            ]
+        except Exception:
+            return []
+
+    def is_avoided(job, avoid_kws):
+        target = (job["jobNm"] + job["jobClcdNM"]).lower()
+        return any(av.lower() in target for av in avoid_kws)
+
+    found_jobs_dict = {}
+    with st.spinner("워크넷 직업사전 검색 중..."):
+        for kw in want_keywords:
+            for j in search_worknet_jobs(kw):
+                if j["jobCd"] not in found_jobs_dict and not is_avoided(j, avoid_keywords):
+                    found_jobs_dict[j["jobCd"]] = j
+    unique_jobs = list(found_jobs_dict.values())
+
+    # ── COMPUTE: 시장 데이터 집계 ─────────────────────────────────────────────
+    top5 = pd.DataFrame()
+    summary = pd.DataFrame()
+    df_filtered = pd.DataFrame()
+
+    if mapped_cats:
+        recent_date = df["기간"].max()
+        start_date  = recent_date - pd.DateOffset(months=11)
+        prev_start  = start_date - pd.DateOffset(months=12)
+        prev_end    = start_date - pd.DateOffset(months=1)
+
+        df_filtered = df[df["직종_중분류"].isin(mapped_cats)]
+        recent_df   = df_filtered[df_filtered["기간"] >= start_date]
+        prev_df     = df_filtered[(df_filtered["기간"] >= prev_start) & (df_filtered["기간"] <= prev_end)]
+
+        recent_agg = recent_df.groupby("직종_중분류").agg(
+            구인인원=("구인인원", "sum"), 구직건수=("구직건수", "sum"), 취업건수=("취업건수", "sum"),
+        ).reset_index()
+        prev_agg = prev_df.groupby("직종_중분류")["구인인원"].sum().rename("전년구인")
+        summary  = recent_agg.merge(prev_agg, on="직종_중분류", how="left")
+        summary["성장률(%)"]      = ((summary["구인인원"] - summary["전년구인"]) / summary["전년구인"].replace(0, pd.NA) * 100).round(1)
+        summary["경쟁률"]         = (summary["구직건수"] / summary["구인인원"].replace(0, pd.NA)).round(2)
+        summary["취업연결비율(%)"] = (summary["취업건수"] / summary["구직건수"].replace(0, pd.NA) * 100).round(1)
+
+        def normalize(s):
+            rng = s.max() - s.min()
+            return (s - s.min()) / rng if rng > 0 else pd.Series([0.5] * len(s), index=s.index)
+
+        summary["점수"] = (
+            normalize(summary["구인인원"]) * 0.35 +
+            normalize(summary["성장률(%)"].fillna(0)) * 0.30 +
+            (1 - normalize(summary["경쟁률"].fillna(summary["경쟁률"].max()))) * 0.20 +
+            normalize(summary["취업연결비율(%)"].fillna(0)) * 0.15
+        ).round(3)
+        top5 = summary.sort_values("점수", ascending=False).head(5).reset_index(drop=True)
+
+    # ── COMPUTE: ML 성장 예측 ─────────────────────────────────────────────────
+    pred_rows = []
+    clf = acc = f1_val = model_data = None
+
+    if not top5.empty:
+        @st.cache_data
+        def train_growth_model(_df):
+            from sklearn.ensemble import RandomForestClassifier
+            from sklearn.model_selection import train_test_split
+            from sklearn.metrics import accuracy_score, f1_score
+            monthly = _df.groupby(["직종_중분류", "기간"]).agg(
+                구인합계=("구인인원", "sum"), 경쟁률평균=("경쟁률", "mean"), 취업연결평균=("취업연결비율", "mean"),
+            ).reset_index()
+            monthly["월"] = monthly["기간"].dt.month
+            prev = monthly[["직종_중분류", "기간", "구인합계"]].copy()
+            prev["기간"] = prev["기간"] + pd.DateOffset(years=1)
+            prev = prev.rename(columns={"구인합계": "전년구인"})
+            data = monthly.merge(prev, on=["직종_중분류", "기간"], how="inner")
+            data["성장"] = (data["구인합계"] > data["전년구인"]).astype(int)
+            X = data[["경쟁률평균", "취업연결평균", "전년구인", "월"]].fillna(0).values
+            y = data["성장"].values
+            if len(X) < 20:
+                return None, None, None, None
+            X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
+            clf = RandomForestClassifier(n_estimators=100, random_state=42)
+            clf.fit(X_tr, y_tr)
+            y_pred = clf.predict(X_te)
+            return clf, accuracy_score(y_te, y_pred), f1_score(y_te, y_pred, zero_division=0), data
+
+        try:
+            clf, acc, f1_val, model_data = train_growth_model(df)
+            if clf is not None:
+                recent_date = df["기간"].max()
+                for _, row in top5.iterrows():
+                    cat    = row["직종_중분류"]
+                    cat_df = df[(df["직종_중분류"] == cat) & (df["기간"] == recent_date)]
+                    if cat_df.empty:
+                        cat_df = df[df["직종_중분류"] == cat].sort_values("기간").tail(1)
+                    prev_df2 = df[(df["직종_중분류"] == cat) & (df["기간"] == recent_date - pd.DateOffset(years=1))]
+                    prev_구인 = float(prev_df2["구인인원"].sum()) if not prev_df2.empty else 0.0
+                    feat = [[float(cat_df["경쟁률"].mean()), float(cat_df["취업연결비율"].mean()), prev_구인, int(recent_date.month)]]
+                    pred = int(clf.predict(feat)[0])
+                    prob = float(clf.predict_proba(feat)[0][pred])
+                    pred_rows.append({
+                        "직종": cat, "예측": "성장" if pred == 1 else "감소",
+                        "신뢰도": f"{prob:.1%}", "구인인원": int(row["구인인원"]),
+                        "성장률(%)": row["성장률(%)"], "경쟁률": row["경쟁률"],
+                        "취업연결비율(%)": row["취업연결비율(%)"],
+                    })
+        except Exception as e:
+            st.warning(f"모델 학습 오류: {e}")
+
+    # ── COMPUTE: 직업→카테고리 매핑 ──────────────────────────────────────────
+    job_cat_map = {}
+    if llm_available and unique_jobs and pred_rows:
+        cat_list  = "\n".join(f"- {p['직종']}" for p in pred_rows)
+        job_list  = "\n".join(f"- {j['jobNm'].strip()}" for j in unique_jobs[:9])
+        mapping_prompt = f"""아래 직업들을 직종 분류 중 가장 관련 있는 하나에 매핑하세요.
+
+직종 분류 목록:
+{cat_list}
+
+직업 목록:
+{job_list}
+
+각 직업을 위 직종 분류 중 하나에 매핑해서 JSON으로만 출력하세요.
+형식: {{"직업명": "직종분류명", ...}}
+JSON만 출력:"""
+        try:
+            with st.spinner("직업-직종 매핑 중..."):
+                map_res = ollama.chat(model="gemma3:4b", messages=[{"role": "user", "content": mapping_prompt}])
+            raw = map_res["message"]["content"].strip()
+            job_cat_map = _json.loads(raw[raw.find("{"):raw.rfind("}")+1])
+        except Exception:
+            job_cat_map = {}
+
+    # ── 모든 계산 결과 캐시에 저장 ────────────────────────────────────────────
+    st.session_state["_cache"] = {
+        "run_key": _run_key, "llm_available": llm_available,
+        "want_keywords": want_keywords, "avoid_keywords": avoid_keywords,
+        "mapped_cats": mapped_cats, "unique_jobs": unique_jobs,
+        "top5": top5, "summary": summary, "df_filtered": df_filtered,
+        "pred_rows": pred_rows, "clf": clf, "acc": acc,
+        "f1_val": f1_val, "model_data": model_data, "job_cat_map": job_cat_map,
+    }
+    # 새 입력이면 이전 리포트 초기화
+    st.session_state.pop("report_text", None)
+
+# ── 캡션 표시 ─────────────────────────────────────────────────────────────────
+if want_keywords:
+    info = f"검색 키워드: {', '.join(want_keywords)}"
+    if avoid_keywords:
+        info += f"  |  제외: {', '.join(avoid_keywords)}"
+    st.caption(info)
+if mapped_cats:
+    st.caption(f"분석 직종: {', '.join(mapped_cats)}")
+
+# 다운로드 배너 자리 예약
+download_placeholder = st.empty()
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# DISPLAY PHASE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ── 2. AI 분석 리포트 ─────────────────────────────────────────────────────────
+st.header("2. AI 분석 리포트")
+
+if llm_available:
+    def make_stats_line(p):
+        return (
+            f"[{p['직종']}] - 구인 {p['구인인원']:,}명, "
+            f"성장률 {p['성장률(%)']:+.1f}%, 경쟁률 {p['경쟁률']:.2f}, "
+            f"취업연결비율 {p['취업연결비율(%)']:.1f}%, "
+            f"ML예측: {p['예측']} (신뢰도 {p['신뢰도']})"
         )
-    extracted_keywords = [k.strip() for k in res["message"]["content"].strip().split(",") if k.strip()]
-    llm_available = True
-except Exception:
-    st.warning("LLM(Ollama)을 사용할 수 없습니다. 입력 텍스트에서 직접 키워드를 분리합니다.")
-    extracted_keywords = [w for w in user_input.replace(",", " ").replace(".", " ").split() if len(w) >= 2]
 
-if extracted_keywords:
-    st.caption(f"분석된 키워드: {', '.join(extracted_keywords)}")
+    def get_stats_line(job):
+        if not pred_rows:
+            return "관련 수치를 연동하지 못했습니다"
+        matched_cat = job_cat_map.get(job["jobNm"].strip())
+        p = next((x for x in pred_rows if x["직종"] == matched_cat), pred_rows[0])
+        return make_stats_line(p)
 
-# ── 3. 키워드 사전으로 직종 후보 확정 (LLM 개입 없음) ───────────────────────
-def match_categories(keywords, categories):
-    expanded = set(keywords)
-    for kw in keywords:
-        for base, extras in KEYWORD_EXPAND.items():
-            if base in kw or kw in base:
-                expanded.update(extras)
+    # 직업명 중복 제거
+    seen_names, deduped_jobs = set(), []
+    for j in unique_jobs:
+        nm = j["jobNm"].strip()
+        if nm not in seen_names:
+            seen_names.add(nm)
+            deduped_jobs.append(j)
 
-    matched = [cat for cat in categories if any(term in cat for term in expanded)]
+    has_jobs = bool(deduped_jobs)
 
-    # 확장으로도 없으면 원래 키워드로 직접 검색
-    if not matched:
-        matched = [cat for cat in categories if any(kw in cat for kw in keywords)]
+    if has_jobs:
+        jobs_section = "\n".join(
+            f"- {j['jobNm'].strip()} | 관련수치: {get_stats_line(j)}"
+            for j in deduped_jobs
+        )
+        data_block = f"""[직업별 추천 목록 및 시장 수치 - 워크넷 데이터 + ML 예측]
+※ 각 직업 옆 '관련수치'는 해당 직업이 속한 직종 분류의 실제 통계입니다.
+{jobs_section}"""
+        job_instruction = """추천 직업 TOP 3을 아래 형식으로 작성하세요 (직업 목록에서만 선택, 서로 다른 3개):
 
-    return matched[:8]
+### 1. [직업명]
 
-mapped_cats = match_categories(extracted_keywords, all_categories)
+**관련 수치:** (위 목록에서 해당 직업의 관련수치를 그대로 복사)
 
-if not mapped_cats:
-    st.error("관련 직종을 찾지 못했습니다. 입력 내용을 좀 더 구체적으로 작성해 주세요.")
-    st.stop()
+**추천 이유:** (사용자 배경과의 연관성, 시장 현황 분석을 서술형으로)
 
-# ── 4. 데이터 조회 및 복합 점수화 ──────────────────────────────────────────
-recent_date = df["기간"].max()
-start_date  = recent_date - pd.DateOffset(months=11)
-prev_start  = start_date - pd.DateOffset(months=12)
-prev_end    = start_date - pd.DateOffset(months=1)
+**취업 준비 전략:** (구체적인 준비 방법)
 
-df_filtered = df[df["직종_중분류"].isin(mapped_cats)]
-recent = df_filtered[df_filtered["기간"] >= start_date]
-prev   = df_filtered[(df_filtered["기간"] >= prev_start) & (df_filtered["기간"] <= prev_end)]
+---
 
-recent_agg = recent.groupby("직종_중분류").agg(
-    구인인원=("구인인원", "sum"),
-    구직건수=("구직건수", "sum"),
-    취업건수=("취업건수", "sum"),
-).reset_index()
-prev_agg = prev.groupby("직종_중분류")["구인인원"].sum().rename("전년구인")
+### 2. [직업명]
 
-summary = recent_agg.merge(prev_agg, on="직종_중분류", how="left")
-summary["성장률(%)"]       = ((summary["구인인원"] - summary["전년구인"]) / summary["전년구인"].replace(0, pd.NA) * 100).round(1)
-summary["경쟁률"]          = (summary["구직건수"] / summary["구인인원"].replace(0, pd.NA)).round(2)
-summary["취업연결비율(%)"]  = (summary["취업건수"] / summary["구직건수"].replace(0, pd.NA) * 100).round(1)
+**관련 수치:** (위 목록에서 해당 직업의 관련수치를 그대로 복사)
 
-def normalize(s):
-    rng = s.max() - s.min()
-    return (s - s.min()) / rng if rng > 0 else pd.Series([0.5] * len(s), index=s.index)
+**추천 이유:** (사용자 배경과의 연관성, 시장 현황 분석을 서술형으로)
 
-summary["점수"] = (
-    normalize(summary["구인인원"]) * 0.35 +
-    normalize(summary["성장률(%)"].fillna(0)) * 0.30 +
-    (1 - normalize(summary["경쟁률"].fillna(summary["경쟁률"].max()))) * 0.20 +
-    normalize(summary["취업연결비율(%)"].fillna(0)) * 0.15
-).round(3)
+**취업 준비 전략:** (구체적인 준비 방법)
 
-top5 = summary.sort_values("점수", ascending=False).head(5).reset_index(drop=True)
+---
 
-# 추천 카드
-cols = st.columns(min(len(top5), 5))
-for i, row in top5.iterrows():
-    with cols[i]:
-        st.metric(f"#{i+1} {row['직종_중분류'][:12]}", f"구인 {int(row['구인인원']):,}명")
-        st.caption(f"성장률 {row['성장률(%)']:+.1f}% | 경쟁률 {row['경쟁률']:.2f} | 취업연결비율 {row['취업연결비율(%)']:.1f}%")
+### 3. [직업명]
 
-st.dataframe(
-    top5[["직종_중분류", "구인인원", "성장률(%)", "경쟁률", "취업연결비율(%)", "점수"]],
-    use_container_width=True,
-)
+**관련 수치:** (위 목록에서 해당 직업의 관련수치를 그대로 복사)
 
+**추천 이유:** (사용자 배경과의 연관성, 시장 현황 분석을 서술형으로)
 
-# ── 5. ML 분류 모델: 직종 성장/감소 예측 (RandomForest) ─────────────────────
-st.subheader("직종 성장 예측 모델 (RandomForest 분류)")
+**취업 준비 전략:** (구체적인 준비 방법)"""
+    else:
+        st.info("워크넷 직업 검색 결과가 없어 직종 분류 시장 데이터 기준으로 분석합니다.")
+        cat_stats = "\n".join(make_stats_line(p) for p in pred_rows) if pred_rows else "(시장 데이터 없음)"
+        data_block = f"""[직종 분류별 시장 통계 - 워크넷 데이터 + ML 예측]
+※ 워크넷 직업 검색 결과가 없어 직종 분류 단위로 분석합니다.
+{cat_stats}"""
+        job_instruction = """직종 분류별 시장 현황을 바탕으로 사용자에게 적합한 직종 방향을 아래 형식으로 작성하세요:
 
-@st.cache_data
-def train_growth_model(_df):
-    from sklearn.ensemble import RandomForestClassifier
-    from sklearn.model_selection import train_test_split
-    from sklearn.metrics import accuracy_score, f1_score
+### 1. [직종 분류명]
 
-    # 월별 집계 (직종_중분류 × 기간)
-    monthly = _df.groupby(["직종_중분류", "기간"]).agg(
-        구인합계=("구인인원", "sum"),
-        경쟁률평균=("경쟁률", "mean"),
-        취업연결평균=("취업연결비율", "mean"),
-    ).reset_index()
-    monthly["연도"] = monthly["기간"].dt.year
-    monthly["월"]   = monthly["기간"].dt.month
+**관련 수치:** (위 직종 분류 통계를 그대로 복사)
 
-    # 전년 동월 구인합계 merge
-    prev = monthly[["직종_중분류", "기간", "구인합계"]].copy()
-    prev["기간"] = prev["기간"] + pd.DateOffset(years=1)
-    prev = prev.rename(columns={"구인합계": "전년구인"})
-    data = monthly.merge(prev, on=["직종_중분류", "기간"], how="inner")
-    data["성장"] = (data["구인합계"] > data["전년구인"]).astype(int)
+**추천 이유:** (사용자 배경과의 연관성, 시장 현황 분석을 서술형으로)
 
-    # 피처: 경쟁률, 취업연결비율, 전년구인, 월(계절성)
-    X = data[["경쟁률평균", "취업연결평균", "전년구인", "월"]].fillna(0).values
-    y = data["성장"].values
+**취업 준비 전략:** (구체적인 준비 방법)
 
-    if len(X) < 20:
-        return None, None, None, None
+---
 
-    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
-    clf = RandomForestClassifier(n_estimators=100, random_state=42)
-    clf.fit(X_tr, y_tr)
-    y_pred = clf.predict(X_te)
+### 2. [직종 분류명]
 
-    return clf, accuracy_score(y_te, y_pred), f1_score(y_te, y_pred, zero_division=0), data
+**관련 수치:** (위 직종 분류 통계를 그대로 복사)
 
-try:
-    clf, acc, f1_val, model_data = train_growth_model(df)
-    if clf is not None:
+**추천 이유:** (사용자 배경과의 연관성, 시장 현황 분석을 서술형으로)
+
+**취업 준비 전략:** (구체적인 준비 방법)"""
+
+    # 캐시된 리포트가 있으면 재사용, 없으면 새로 생성
+    if st.session_state.get("report_text"):
+        st.markdown(st.session_state["report_text"])
+        st.caption("⚠️ 본 리포트는 워크넷 공개 데이터를 기반으로 AI가 자동 분석한 결과입니다. 실제 채용 시장과 차이가 있을 수 있으므로 참고용으로만 활용하시기 바랍니다.")
+    else:
+        report_prompt = f"""사용자 정보: "{user_input}"
+
+{data_block}
+
+위 데이터만 사용해서 한국어로 작성하세요.
+절대 지켜야 할 규칙:
+- 수치는 위 데이터에 있는 것만 인용하세요. 없는 숫자를 만들거나 추측하지 마세요.
+- 관련 수치 항목은 "[직종명] - 구인 XX명, ..." 형식 그대로 복사하세요. [직종명]을 절대 생략하지 마세요.
+
+{job_instruction}
+"""
+        with st.spinner("AI 리포트 작성 중..."):
+            try:
+                report_res = ollama.chat(model="gemma3:4b", messages=[{"role": "user", "content": report_prompt}])
+                report_text = report_res["message"]["content"]
+                st.session_state["report_text"] = report_text
+                st.markdown(report_text)
+                st.caption("⚠️ 본 리포트는 워크넷 공개 데이터를 기반으로 AI가 자동 분석한 결과입니다. 실제 채용 시장과 차이가 있을 수 있으므로 참고용으로만 활용하시기 바랍니다.")
+            except Exception as e:
+                st.error(f"리포트 생성 오류: {e}")
+else:
+    st.info("Ollama를 설치하고 gemma3:4b 모델을 받으면 AI 분석 리포트가 표시됩니다.")
+
+st.divider()
+
+# ── 3. 워크넷 직업 목록 ────────────────────────────────────────────────────────
+st.header("3. 워크넷 직업사전 검색 결과")
+if unique_jobs:
+    cols = st.columns(3)
+    for i, job in enumerate(unique_jobs[:9]):
+        with cols[i % 3]:
+            st.success(f"**{job['jobNm'].strip()}**\n\n{job['jobClcdNM'].strip()}")
+elif not WORKNET_API_KEY:
+    st.warning("워크넷 API 키가 설정되지 않았습니다.")
+else:
+    st.warning("관련 직업을 찾지 못했습니다. 키워드를 바꿔서 다시 입력해 보세요.")
+
+# ── 4. 시장 현황 테이블 ────────────────────────────────────────────────────────
+if not top5.empty:
+    st.header("4. 관련 직종 시장 현황 (워크넷 데이터 기준)")
+    cols = st.columns(min(len(top5), 5))
+    for i, row in top5.iterrows():
+        with cols[i]:
+            st.metric(f"#{i+1} {row['직종_중분류'][:12]}", f"구인 {int(row['구인인원']):,}명")
+            st.caption(f"성장률 {row['성장률(%)']:+.1f}% | 경쟁률 {row['경쟁률']:.2f} | 취업연결비율 {row['취업연결비율(%)']:.1f}%")
+    st.dataframe(
+        top5[["직종_중분류", "구인인원", "성장률(%)", "경쟁률", "취업연결비율(%)", "점수"]],
+        use_container_width=True,
+    )
+
+# ── 5. ML 예측 결과 ────────────────────────────────────────────────────────────
+if pred_rows:
+    st.header("5. 직종 성장 예측 모델 (RandomForest 분류)")
+    if clf is not None and acc is not None:
         mc1, mc2, mc3 = st.columns(3)
         mc1.metric("모델 정확도 (Accuracy)", f"{acc:.1%}")
         mc2.metric("F1 Score", f"{f1_val:.3f}")
         mc3.metric("학습 샘플 수", f"{len(model_data):,}개 (직종×월)")
-        st.caption("💡 인사이트: 월별 데이터(경쟁률·취업연결비율·전년 동월 구인규모·계절성)로 해당 직종의 구인이 전년 동월 대비 늘어날지 줄어들지를 RandomForest로 분류합니다. 테스트셋 20% 기준 정확도와 F1 Score를 평가지표로 사용합니다.")
-
-        st.write("**추천 직종별 성장 예측 결과**")
-        recent = df["기간"].max()
-        pred_rows = []
-        for _, row in top5.iterrows():
-            cat = row["직종_중분류"]
-            cat_df = df[(df["직종_중분류"] == cat) & (df["기간"] == recent)]
-            if cat_df.empty:
-                cat_df = df[(df["직종_중분류"] == cat)].sort_values("기간").tail(1)
-            prev_df = df[(df["직종_중분류"] == cat) & (df["기간"] == recent - pd.DateOffset(years=1))]
-            prev_구인 = float(prev_df["구인인원"].sum()) if not prev_df.empty else 0.0
-            feat = [[
-                float(cat_df["경쟁률"].mean()),
-                float(cat_df["취업연결비율"].mean()),
-                prev_구인,
-                int(recent.month),
-            ]]
-            pred = int(clf.predict(feat)[0])
-            prob = float(clf.predict_proba(feat)[0][pred])
-            pred_rows.append({
-                "직종": cat,
-                "예측": "📈 성장" if pred == 1 else "📉 감소",
-                "신뢰도": f"{prob:.1%}",
-            })
-        if pred_rows:
-            st.dataframe(pd.DataFrame(pred_rows), use_container_width=True, hide_index=True)
-    else:
-        st.info("데이터가 부족해 모델을 학습하지 못했습니다.")
-except Exception as e:
-    st.warning(f"모델 학습 오류: {e}")
-# ── 6. 워크넷 직업사전 API로 세부 직업명 조회 ──────────────────────────────
-def get_specific_jobs(category_name):
-    if not WORKNET_API_KEY:
-        return []
-    try:
-        keyword = category_name.replace("관련직", "").replace("전문가", "").strip().split()[0]
-        res = requests.get(
-            "https://www.work24.go.kr/cm/openApi/call/wk/callOpenApiSvcInfo212L01.do",
-            params={"authKey": WORKNET_API_KEY, "returnType": "XML",
-                    "target": "JOBCD", "srchType": "K", "keyword": keyword},
-            timeout=5,
-        )
-        if res.status_code != 200:
-            return []
-        root = ET.fromstring(res.text)
-        return [item.findtext("jobNm") or "" for item in root.iter("jobList")][:5]
-    except Exception:
-        return []
-
-specific_jobs = {}
-if WORKNET_API_KEY:
-    with st.spinner("워크넷 직업사전에서 세부 직업명 조회 중..."):
-        for _, row in top5.iterrows():
-            jobs = get_specific_jobs(row["직종_중분류"])
-            if jobs:
-                specific_jobs[row["직종_중분류"]] = jobs
-
-if specific_jobs:
-    st.subheader("세부 직업명 (워크넷 직업사전 기준)")
-    for cat, jobs in specific_jobs.items():
-        st.write(f"**{cat}**: {', '.join(jobs)}")
-
-# ── 7. 시각화 ───────────────────────────────────────────────────────────────
-st.header("3. 선택 직종 구인 추이 (월별)")
-trend = df_filtered.groupby(["기간", "직종_중분류"])["구인인원"].sum().reset_index()
-fig1 = px.line(trend, x="기간", y="구인인원", color="직종_중분류",
-               title="관련 직종 월별 구인인원 추이")
-st.plotly_chart(fig1, use_container_width=True)
-st.caption("💡 인사이트: 최근 3개월간 구인이 증가 추세인 직종이 지금 지원하기 가장 좋은 타이밍이다 — 그래프에서 우상향하는 직종을 1순위 지원 타겟으로 잡아라.")
-
-st.header("4. 직종별 취업 경쟁률 비교")
-fig2 = px.bar(
-    summary.sort_values("경쟁률"),
-    x="경쟁률", y="직종_중분류", orientation="h",
-    color="경쟁률", color_continuous_scale="RdYlGn_r",
-    title="직종별 취업 경쟁률 (낮을수록 취업 유리)",
-)
-fig2.update_layout(yaxis={"categoryorder": "total ascending"})
-st.plotly_chart(fig2, use_container_width=True)
-st.caption("💡 인사이트: 같은 추천 직종이라도 경쟁률이 낮은 직종에 먼저 지원하면 합격 확률이 올라간다 — 막대가 짧을수록 자리 대비 경쟁자가 적은 직종이다.")
-
-# ── 8. LLM 최종 리포트 (수치 해석 및 준비 방향만, 직업명 창작 금지) ─────────
-st.header("5. AI 분석 리포트")
-
-if llm_available:
-    summary_text = "\n".join(
-        f"- {row['직종_중분류']}: 구인 {int(row['구인인원']):,}명, 성장률 {row['성장률(%)']:+.1f}%, 경쟁률 {row['경쟁률']:.2f}, 취업연결비율 {row['취업연결비율(%)']:.1f}%"
-        for _, row in top5.iterrows()
+    display_df = pd.DataFrame(pred_rows)[["직종", "예측", "신뢰도"]]
+    display_df["예측"] = display_df.apply(
+        lambda r: "📈 " + r["예측"] if r["예측"] == "성장" else "📉 " + r["예측"], axis=1
     )
-    jobs_text = "\n".join(
-        f"- {cat}: {', '.join(jobs)}" for cat, jobs in specific_jobs.items()
-    ) if specific_jobs else "(직업사전 미조회)"
+    st.dataframe(display_df, use_container_width=True, hide_index=True)
 
-    report_prompt = f"""사용자 정보:
-"{user_input}"
+# ── 6. 차트 ────────────────────────────────────────────────────────────────────
+if not df_filtered.empty:
+    st.header("6. 선택 직종 구인 추이 (월별)")
+    trend = df_filtered.groupby(["기간", "직종_중분류"])["구인인원"].sum().reset_index()
+    fig1 = px.line(trend, x="기간", y="구인인원", color="직종_중분류", title="관련 직종 월별 구인인원 추이")
+    st.plotly_chart(fig1, use_container_width=True)
+    st.caption("💡 최근 3개월간 구인이 증가 추세인 직종이 지금 지원하기 가장 좋은 타이밍입니다.")
 
-워크넷 데이터 분석 결과 (최근 12개월):
-{summary_text}
+if not summary.empty:
+    st.header("7. 직종별 취업 경쟁률 비교")
+    fig2 = px.bar(
+        summary.sort_values("경쟁률"),
+        x="경쟁률", y="직종_중분류", orientation="h",
+        color="경쟁률", color_continuous_scale="RdYlGn_r",
+        title="직종별 취업 경쟁률 (낮을수록 취업 유리)",
+    )
+    fig2.update_layout(yaxis={"categoryorder": "total ascending"})
+    st.plotly_chart(fig2, use_container_width=True)
 
-워크넷 직업사전 세부 직업명:
-{jobs_text}
-
-위 데이터를 바탕으로 다음 세 가지를 한국어로 서술해 주세요.
-반드시 위에 제시된 직업명만 사용하고, 임의로 직업명을 만들지 마세요.
-1. 각 직종의 시장 현황 해석 (수치와 함께, 경쟁률·성장률이 무엇을 의미하는지 설명)
-2. 사용자 배경에 맞는 직업 추천 (직업사전에 있는 직업명 기준으로만)
-3. 추천 직업별 취업 준비 방향 조언
-"""
-    with st.spinner("AI가 분석 리포트를 작성 중..."):
-        try:
-            report_res = ollama.chat(
-                model="gemma3:4b",
-                messages=[{"role": "user", "content": report_prompt}],
+# ── 다운로드 배너 ─────────────────────────────────────────────────────────────
+if st.session_state.get("report_text"):
+    with download_placeholder.container():
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            st.warning("화면을 나가면 분석 결과가 초기화됩니다. 리포트를 저장하시겠습니까?")
+        with col2:
+            st.download_button(
+                label="📥 예, 다운로드",
+                data=st.session_state["report_text"],
+                file_name="직종추천_리포트.txt",
+                mime="text/plain",
+                use_container_width=True,
             )
-            st.markdown(report_res["message"]["content"])
-        except Exception as e:
-            st.error(f"리포트 생성 중 오류: {e}")
-else:
-    st.info("Ollama를 설치하고 gemma3:4b 모델을 받으면 AI 분석 리포트가 표시됩니다.")
